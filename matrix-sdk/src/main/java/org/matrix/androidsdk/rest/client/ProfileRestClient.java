@@ -21,7 +21,6 @@ import android.text.TextUtils;
 import org.matrix.androidsdk.HomeServerConnectionConfig;
 import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.rest.api.ProfileApi;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback;
 import org.matrix.androidsdk.rest.model.ChangePasswordParams;
 import org.matrix.androidsdk.rest.model.DeactivateAccountParams;
@@ -44,6 +43,7 @@ import org.matrix.androidsdk.rest.model.pid.AddThreePidsParams;
 import org.matrix.androidsdk.rest.model.pid.DeleteThreePidParams;
 import org.matrix.androidsdk.rest.model.pid.ThirdPartyIdentifier;
 import org.matrix.androidsdk.rest.model.pid.ThreePid;
+import org.matrix.androidsdk.util.callback.ApiCallback;
 
 import java.util.List;
 
@@ -195,9 +195,9 @@ public class ProfileRestClient extends RestClient<ProfileApi> {
     /**
      * Reset the password to a new one.
      *
-     * @param newPassword    the new password
+     * @param newPassword         the new password
      * @param threePidCredentials the three pids.
-     * @param callback       the callback
+     * @param callback            the callback
      */
     public void resetPassword(final String newPassword, final ThreePidCredentials threePidCredentials, final ApiCallback<Void> callback) {
         // privacy

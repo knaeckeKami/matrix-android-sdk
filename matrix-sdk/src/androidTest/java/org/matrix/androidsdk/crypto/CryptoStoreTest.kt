@@ -18,7 +18,7 @@ package org.matrix.androidsdk.crypto
 
 import org.junit.Assert.*
 import org.junit.Test
-import org.matrix.androidsdk.data.cryptostore.IMXCryptoStore
+import org.matrix.androidsdk.crypto.cryptostore.IMXCryptoStore
 
 class CryptoStoreTest {
 

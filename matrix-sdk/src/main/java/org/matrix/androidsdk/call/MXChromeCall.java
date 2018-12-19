@@ -36,10 +36,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.matrix.androidsdk.MXSession;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.Timer;
 import java.util.TimerTask;

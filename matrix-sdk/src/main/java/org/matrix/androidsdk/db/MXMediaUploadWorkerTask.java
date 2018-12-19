@@ -24,13 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.listeners.IMXMediaUploadListener;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.model.ContentResponse;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.ssl.CertUtil;
 import org.matrix.androidsdk.util.ContentManager;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.io.DataOutputStream;
 import java.io.EOFException;

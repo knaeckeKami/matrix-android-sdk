@@ -29,18 +29,20 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.matrix.androidsdk.call.MXCallsManager;
 import org.matrix.androidsdk.crypto.MXCrypto;
 import org.matrix.androidsdk.crypto.MXCryptoConfig;
+import org.matrix.androidsdk.crypto.cryptostore.IMXCryptoStore;
+import org.matrix.androidsdk.crypto.cryptostore.MXFileCryptoStore;
+import org.matrix.androidsdk.crypto.cryptostore.db.RealmCryptoStore;
+import org.matrix.androidsdk.crypto.interfaces.CryptoSession;
 import org.matrix.androidsdk.data.DataRetriever;
 import org.matrix.androidsdk.data.MyUser;
 import org.matrix.androidsdk.data.Room;
 import org.matrix.androidsdk.data.RoomSummary;
 import org.matrix.androidsdk.data.RoomTag;
 import org.matrix.androidsdk.data.comparator.RoomComparatorWithTag;
-import org.matrix.androidsdk.data.cryptostore.IMXCryptoStore;
-import org.matrix.androidsdk.data.cryptostore.MXFileCryptoStore;
-import org.matrix.androidsdk.data.cryptostore.db.RealmCryptoStore;
 import org.matrix.androidsdk.data.metrics.MetricsListener;
 import org.matrix.androidsdk.data.store.IMXStore;
 import org.matrix.androidsdk.data.store.MXStoreListener;
@@ -48,9 +50,6 @@ import org.matrix.androidsdk.db.MXLatestChatMessageCache;
 import org.matrix.androidsdk.db.MXMediaCache;
 import org.matrix.androidsdk.groups.GroupsManager;
 import org.matrix.androidsdk.network.NetworkConnectivityReceiver;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
-import org.matrix.androidsdk.rest.callback.ApiFailureCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.client.AccountDataRestClient;
 import org.matrix.androidsdk.rest.client.CallRestClient;
 import org.matrix.androidsdk.rest.client.CryptoRestClient;
@@ -69,7 +68,6 @@ import org.matrix.androidsdk.rest.client.ThirdPidRestClient;
 import org.matrix.androidsdk.rest.model.CreateRoomParams;
 import org.matrix.androidsdk.rest.model.CreateRoomResponse;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.ReceiptData;
 import org.matrix.androidsdk.rest.model.RoomDirectoryVisibility;
 import org.matrix.androidsdk.rest.model.RoomMember;
@@ -97,11 +95,16 @@ import org.matrix.androidsdk.sync.EventsThreadListener;
 import org.matrix.androidsdk.util.BingRulesManager;
 import org.matrix.androidsdk.util.ContentManager;
 import org.matrix.androidsdk.util.ContentUtils;
+import org.matrix.androidsdk.util.CryptoUtilImpl;
 import org.matrix.androidsdk.util.FilterUtil;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.UnsentEventsManager;
 import org.matrix.androidsdk.util.VersionsUtil;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.ApiFailureCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 import org.matrix.olm.OlmManager;
 
 import java.io.File;
@@ -121,7 +124,7 @@ import java.util.Set;
  * Class that represents one user's session with a particular home server.
  * There can potentially be multiple sessions for handling multiple accounts.
  */
-public class MXSession {
+public class MXSession implements CryptoSession {
     private static final String LOG_TAG = MXSession.class.getSimpleName();
 
     private DataRetriever mDataRetriever;
@@ -264,7 +267,7 @@ public class MXSession {
 
         // Init the crypto store
         mCryptoStore = withLegacyCryptoStore ? new MXFileCryptoStore(withFileEncryptionEnabled) : new RealmCryptoStore(withFileEncryptionEnabled);
-        mCryptoStore.initWithCredentials(mContext, mCredentials);
+        mCryptoStore.initWithCredentials(mContext, mCredentials, CryptoUtilImpl.INSTANCE);
 
         mDataHandler.getStore().addMXStoreListener(new MXStoreListener() {
             @Override
@@ -434,6 +437,7 @@ public class MXSession {
      *
      * @return the data handler.
      */
+    @Override
     public MXDataHandler getDataHandler() {
         checkIfAlive();
         return mDataHandler;
@@ -489,6 +493,7 @@ public class MXSession {
      *
      * @return the Room Keys API client
      */
+    @Override
     public RoomKeysRestClient getRoomKeysRestClient() {
         checkIfAlive();
         return mRoomKeysRestClient;
@@ -548,6 +553,7 @@ public class MXSession {
         return mPushersRestClient;
     }
 
+    @Override
     public CryptoRestClient getCryptoRestClient() {
         checkIfAlive();
         return mCryptoRestClient;
@@ -2380,7 +2386,7 @@ public class MXSession {
                 return;
             }
 
-            mCrypto = new MXCrypto(this, mCryptoStore, sCryptoConfig);
+            mCrypto = new MXCrypto(this, mCryptoStore, sCryptoConfig, CryptoUtilImpl.INSTANCE);
             mDataHandler.setCrypto(mCrypto);
             // the room summaries are not stored with decrypted content
             decryptRoomSummaries();
@@ -2403,7 +2409,7 @@ public class MXSession {
             if (cryptoEnabled) {
                 Log.d(LOG_TAG, "Crypto is enabled");
                 mCryptoStore.open();
-                mCrypto = new MXCrypto(this, mCryptoStore, sCryptoConfig);
+                mCrypto = new MXCrypto(this, mCryptoStore, sCryptoConfig, CryptoUtilImpl.INSTANCE);
                 mCrypto.start(true, new SimpleApiCallback<Void>(callback) {
                     @Override
                     public void onSuccess(Void info) {
@@ -2574,6 +2580,17 @@ public class MXSession {
      */
     public GroupsManager getGroupsManager() {
         return mGroupsManager;
+    }
+
+    @NotNull
+    @Override
+    public String getDeviceId() {
+        return getCredentials().deviceId;
+    }
+
+    @Override
+    public void setDeviceId(@NotNull String deviceId) {
+        getCredentials().deviceId = deviceId;
     }
 
     /* ==========================================================================================

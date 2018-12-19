@@ -24,16 +24,15 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.matrix.androidsdk.MXSession;
-import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.common.CommonTestHelper;
 import org.matrix.androidsdk.data.Room;
 import org.matrix.androidsdk.data.RoomState;
 import org.matrix.androidsdk.data.timeline.EventTimeline;
 import org.matrix.androidsdk.data.timeline.EventTimelineFactory;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.model.Event;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
 
 import java.util.concurrent.CountDownLatch;
 

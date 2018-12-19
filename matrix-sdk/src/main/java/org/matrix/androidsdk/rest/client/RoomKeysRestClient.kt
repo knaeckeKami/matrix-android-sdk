@@ -18,16 +18,18 @@ package org.matrix.androidsdk.rest.client
 
 import org.matrix.androidsdk.HomeServerConnectionConfig
 import org.matrix.androidsdk.RestClient
+import org.matrix.androidsdk.crypto.interfaces.CryptoRoomKeysRestClient
+import org.matrix.androidsdk.crypto.model.keys.*
 import org.matrix.androidsdk.rest.api.RoomKeysApi
-import org.matrix.androidsdk.rest.callback.ApiCallback
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback
-import org.matrix.androidsdk.rest.model.keys.*
+import org.matrix.androidsdk.util.callback.ApiCallback
 
 /**
  * Class used to make requests to the RoomKeys API.
  */
 class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
-        RestClient<RoomKeysApi>(hsConfig, RoomKeysApi::class.java, RestClient.URI_API_PREFIX_PATH_R0) {
+        RestClient<RoomKeysApi>(hsConfig, RoomKeysApi::class.java, RestClient.URI_API_PREFIX_PATH_R0),
+        CryptoRoomKeysRestClient {
 
     /**
      * Get the key backup last version
@@ -35,7 +37,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      *
      * @param callback the callback
      */
-    fun getKeysBackupLastVersion(callback: ApiCallback<KeysVersionResult>) {
+    override fun getKeysBackupLastVersion(callback: ApiCallback<KeysVersionResult>) {
         val description = "getKeysBackupVersion"
 
         mApi.getKeysBackupLastVersion()
@@ -63,7 +65,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param createKeysBackupVersionBody the body
      * @param callback                    the callback
      */
-    fun createKeysBackupVersion(createKeysBackupVersionBody: CreateKeysBackupVersionBody, callback: ApiCallback<KeysVersion>) {
+    override fun createKeysBackupVersion(createKeysBackupVersionBody: CreateKeysBackupVersionBody, callback: ApiCallback<KeysVersion>) {
         val description = "createKeysBackupVersion"
 
         mApi.createKeysBackupVersion(createKeysBackupVersionBody)
@@ -97,9 +99,9 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param keysBackupData the data to send
      * @param callback       the callback
      */
-    fun sendKeysBackup(version: String,
-                       keysBackupData: KeysBackupData,
-                       callback: ApiCallback<Void>) {
+    override fun sendKeysBackup(version: String,
+                                keysBackupData: KeysBackupData,
+                                callback: ApiCallback<Void>) {
         val description = "sendKeysBackup"
 
         mApi.storeSessionsData(version, keysBackupData)
@@ -114,7 +116,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param version   the version of the backup, or empty String to retrieve the last version
      * @param callback  the callback
      */
-    fun getRoomKeyBackup(roomId: String, sessionId: String, version: String, callback: ApiCallback<KeyBackupData>) {
+    override fun getRoomKeyBackup(roomId: String, sessionId: String, version: String, callback: ApiCallback<KeyBackupData>) {
         val description = "getKeyBackup"
 
         mApi.getRoomSessionData(roomId, sessionId, version)
@@ -128,7 +130,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param version  the version of the backup, or empty String to retrieve the last version
      * @param callback the callback
      */
-    fun getRoomKeysBackup(roomId: String, version: String, callback: ApiCallback<RoomKeysBackupData>) {
+    override fun getRoomKeysBackup(roomId: String, version: String, callback: ApiCallback<RoomKeysBackupData>) {
         val description = "getRoomKeysBackup"
 
         mApi.getRoomSessionsData(roomId, version)
@@ -141,7 +143,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param version  the version of the backup, or empty String to retrieve the last version
      * @param callback the callback
      */
-    fun getKeysBackup(version: String, callback: ApiCallback<KeysBackupData>) {
+    override fun getKeysBackup(version: String, callback: ApiCallback<KeysBackupData>) {
         val description = "getKeyBackup"
 
         mApi.getSessionsData(version)
@@ -165,7 +167,7 @@ class RoomKeysRestClient(hsConfig: HomeServerConnectionConfig) :
      * @param version
      * @param callback
      */
-    fun deleteKeysBackup(version: String, callback: ApiCallback<Void>) {
+    override fun deleteKeysBackup(version: String, callback: ApiCallback<Void>) {
         val description = "deleteKeyBackup"
 
         mApi.deleteSessionsData(version)

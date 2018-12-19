@@ -37,12 +37,12 @@ import android.util.Pair;
 import android.webkit.MimeTypeMap;
 
 import org.matrix.androidsdk.listeners.IMXMediaUploadListener;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.model.Event;
 import org.matrix.androidsdk.rest.model.message.Message;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.ResourceUtils;
+import org.matrix.androidsdk.util.callback.ApiCallback;
 
 import java.io.File;
 import java.io.FileOutputStream;

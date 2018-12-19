@@ -34,8 +34,8 @@ import org.matrix.androidsdk.common.TestConstants;
 import org.matrix.androidsdk.crypto.data.MXDeviceInfo;
 import org.matrix.androidsdk.crypto.data.MXKey;
 import org.matrix.androidsdk.crypto.data.MXUsersDevicesMap;
-import org.matrix.androidsdk.rest.model.crypto.KeysQueryResponse;
-import org.matrix.androidsdk.rest.model.crypto.KeysUploadResponse;
+import org.matrix.androidsdk.crypto.model.crypto.KeysQueryResponse;
+import org.matrix.androidsdk.crypto.model.crypto.KeysUploadResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -21,14 +21,14 @@ import android.text.TextUtils;
 
 import org.matrix.androidsdk.data.store.IMXStore;
 import org.matrix.androidsdk.data.timeline.EventTimeline;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.client.RoomsRestClient;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.TokensChunkEvents;
 import org.matrix.androidsdk.util.FilterUtil;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.Collection;
 import java.util.HashMap;

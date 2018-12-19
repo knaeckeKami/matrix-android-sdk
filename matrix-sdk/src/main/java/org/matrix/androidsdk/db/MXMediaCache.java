@@ -33,18 +33,18 @@ import android.widget.ImageView;
 
 import org.matrix.androidsdk.HomeServerConnectionConfig;
 import org.matrix.androidsdk.crypto.MXEncryptedAttachments;
+import org.matrix.androidsdk.crypto.model.crypto.EncryptedFileInfo;
 import org.matrix.androidsdk.listeners.IMXMediaDownloadListener;
 import org.matrix.androidsdk.listeners.IMXMediaUploadListener;
 import org.matrix.androidsdk.listeners.MXMediaDownloadListener;
 import org.matrix.androidsdk.network.NetworkConnectivityReceiver;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.client.MediaScanRestClient;
-import org.matrix.androidsdk.rest.model.crypto.EncryptedFileInfo;
 import org.matrix.androidsdk.util.ContentManager;
 import org.matrix.androidsdk.util.ContentUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.MXOsHandler;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
 
 import java.io.File;
 import java.io.FileInputStream;

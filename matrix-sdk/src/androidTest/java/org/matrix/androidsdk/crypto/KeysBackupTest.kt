@@ -30,12 +30,12 @@ import org.matrix.androidsdk.crypto.keysbackup.KeyBackupVersionTrust
 import org.matrix.androidsdk.crypto.keysbackup.KeysBackup
 import org.matrix.androidsdk.crypto.keysbackup.KeysBackupStateManager
 import org.matrix.androidsdk.crypto.keysbackup.MegolmBackupCreationInfo
-import org.matrix.androidsdk.rest.callback.SuccessCallback
-import org.matrix.androidsdk.rest.callback.SuccessErrorCallback
-import org.matrix.androidsdk.rest.model.keys.CreateKeysBackupVersionBody
-import org.matrix.androidsdk.rest.model.keys.KeysVersion
-import org.matrix.androidsdk.rest.model.keys.KeysVersionResult
+import org.matrix.androidsdk.crypto.model.keys.CreateKeysBackupVersionBody
+import org.matrix.androidsdk.crypto.model.keys.KeysVersion
+import org.matrix.androidsdk.crypto.model.keys.KeysVersionResult
 import org.matrix.androidsdk.util.JsonUtils
+import org.matrix.androidsdk.util.callback.SuccessCallback
+import org.matrix.androidsdk.util.callback.SuccessErrorCallback
 import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
@@ -549,7 +549,7 @@ class KeysBackupTest {
         val createKeysBackupVersionBody = CreateKeysBackupVersionBody()
         createKeysBackupVersionBody.algorithm = megolmBackupCreationInfo.algorithm
         createKeysBackupVersionBody.authData = JsonUtils.getBasicGson().toJsonTree(megolmBackupCreationInfo.authData)
-        cryptoTestData.firstSession.roomKeysRestClient.createKeysBackupVersion(createKeysBackupVersionBody, TestApiCallback(latch))
+        cryptoTestData.firstSession.getRoomKeysRestClient().createKeysBackupVersion(createKeysBackupVersionBody, TestApiCallback(latch))
         mTestHelper.await(latch)
 
         // Reset the store backup status for keys
@@ -642,7 +642,8 @@ class KeysBackupTest {
 
         // - Validate the old device from the new one
         val latch3 = CountDownLatch(1)
-        aliceSession2.crypto!!.setDeviceVerification(MXDeviceInfo.DEVICE_VERIFICATION_VERIFIED, oldDeviceId, aliceSession2.myUserId, TestApiCallback(latch3))
+        aliceSession2.crypto!!
+                .setDeviceVerification(MXDeviceInfo.DEVICE_VERIFICATION_VERIFIED, oldDeviceId, aliceSession2.myUserId, TestApiCallback(latch3))
         mTestHelper.await(latch3)
 
         // -> Backup should automatically enable on the new device

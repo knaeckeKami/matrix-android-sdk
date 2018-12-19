@@ -21,10 +21,11 @@ import com.google.gson.stream.MalformedJsonException;
 
 import org.matrix.androidsdk.rest.model.HttpError;
 import org.matrix.androidsdk.rest.model.HttpException;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.UnsentEventsManager;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.io.IOException;
 

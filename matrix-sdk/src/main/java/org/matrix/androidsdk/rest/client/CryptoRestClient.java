@@ -23,17 +23,18 @@ import org.matrix.androidsdk.HomeServerConnectionConfig;
 import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.crypto.data.MXKey;
 import org.matrix.androidsdk.crypto.data.MXUsersDevicesMap;
+import org.matrix.androidsdk.crypto.interfaces.CryptoCryptoRestClient;
+import org.matrix.androidsdk.crypto.model.crypto.KeyChangesResponse;
+import org.matrix.androidsdk.crypto.model.crypto.KeysClaimResponse;
+import org.matrix.androidsdk.crypto.model.crypto.KeysQueryResponse;
+import org.matrix.androidsdk.crypto.model.crypto.KeysUploadResponse;
 import org.matrix.androidsdk.rest.api.CryptoApi;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback;
-import org.matrix.androidsdk.rest.model.crypto.KeyChangesResponse;
-import org.matrix.androidsdk.rest.model.crypto.KeysClaimResponse;
-import org.matrix.androidsdk.rest.model.crypto.KeysQueryResponse;
-import org.matrix.androidsdk.rest.model.crypto.KeysUploadResponse;
 import org.matrix.androidsdk.rest.model.pid.DeleteDeviceParams;
 import org.matrix.androidsdk.rest.model.sync.DevicesListResponse;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.Random;
 
 import retrofit2.Response;
 
-public class CryptoRestClient extends RestClient<CryptoApi> {
+public class CryptoRestClient extends RestClient<CryptoApi> implements CryptoCryptoRestClient {
 
     private static final String LOG_TAG = CryptoRestClient.class.getSimpleName();
 
@@ -61,8 +62,9 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
      * @param deviceId    he explicit device_id to use for upload (default is to use the same as that used during auth).
      * @param callback    the asynchronous callback
      */
-    public void uploadKeys(final Map<String, Object> deviceKeys,
-                           final Map<String, Object> oneTimeKeys,
+    @Override
+    public void uploadKeys(final Map<String, ?> deviceKeys,
+                           final Map<String, ?> oneTimeKeys,
                            final String deviceId,
                            final ApiCallback<KeysUploadResponse> callback) {
         final String description = "uploadKeys";
@@ -82,20 +84,20 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
             mApi.uploadKeys(encodedDeviceId, params)
                     .enqueue(new RestAdapterCallback<KeysUploadResponse>(description, null, callback,
                             new RestAdapterCallback.RequestRetryCallBack() {
-                @Override
-                public void onRetry() {
-                    uploadKeys(deviceKeys, oneTimeKeys, deviceId, callback);
-                }
-            }));
+                                @Override
+                                public void onRetry() {
+                                    uploadKeys(deviceKeys, oneTimeKeys, deviceId, callback);
+                                }
+                            }));
         } else {
             mApi.uploadKeys(params)
                     .enqueue(new RestAdapterCallback<KeysUploadResponse>(description, null, callback,
                             new RestAdapterCallback.RequestRetryCallBack() {
-                @Override
-                public void onRetry() {
-                    uploadKeys(deviceKeys, oneTimeKeys, deviceId, callback);
-                }
-            }));
+                                @Override
+                                public void onRetry() {
+                                    uploadKeys(deviceKeys, oneTimeKeys, deviceId, callback);
+                                }
+                            }));
         }
     }
 
@@ -106,6 +108,7 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
      * @param token    the up-to token
      * @param callback the asynchronous callback
      */
+    @Override
     public void downloadKeysForUsers(final List<String> userIds, final String token, final ApiCallback<KeysQueryResponse> callback) {
         final String description = "downloadKeysForUsers";
 
@@ -127,11 +130,11 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
         mApi.downloadKeysForUsers(parameters)
                 .enqueue(new RestAdapterCallback<KeysQueryResponse>(description, mUnsentEventsManager, callback,
                         new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                downloadKeysForUsers(userIds, token, callback);
-            }
-        }));
+                            @Override
+                            public void onRetry() {
+                                downloadKeysForUsers(userIds, token, callback);
+                            }
+                        }));
     }
 
     /**
@@ -140,6 +143,7 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
      * @param usersDevicesKeyTypesMap a list of users, devices and key types to retrieve keys for.
      * @param callback                the asynchronous callback
      */
+    @Override
     public void claimOneTimeKeysForUsersDevices(
             final MXUsersDevicesMap<String> usersDevicesKeyTypesMap,
             final ApiCallback<MXUsersDevicesMap<MXKey>> callback) {
@@ -151,40 +155,40 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
         mApi.claimOneTimeKeysForUsersDevices(params)
                 .enqueue(new RestAdapterCallback<KeysClaimResponse>(description, mUnsentEventsManager, callback,
                         new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                claimOneTimeKeysForUsersDevices(usersDevicesKeyTypesMap, callback);
-            }
-        }) {
-            @Override
-            public void success(KeysClaimResponse keysClaimResponse, Response response) {
-                onEventSent();
+                            @Override
+                            public void onRetry() {
+                                claimOneTimeKeysForUsersDevices(usersDevicesKeyTypesMap, callback);
+                            }
+                        }) {
+                    @Override
+                    public void success(KeysClaimResponse keysClaimResponse, Response response) {
+                        onEventSent();
 
-                Map<String, Map<String, MXKey>> map = new HashMap<>();
+                        Map<String, Map<String, MXKey>> map = new HashMap<>();
 
-                if (null != keysClaimResponse.oneTimeKeys) {
-                    for (String userId : keysClaimResponse.oneTimeKeys.keySet()) {
-                        Map<String, Map<String, Map<String, Object>>> mapByUserId = keysClaimResponse.oneTimeKeys.get(userId);
+                        if (null != keysClaimResponse.oneTimeKeys) {
+                            for (String userId : keysClaimResponse.oneTimeKeys.keySet()) {
+                                Map<String, Map<String, Map<String, Object>>> mapByUserId = keysClaimResponse.oneTimeKeys.get(userId);
 
-                        Map<String, MXKey> keysMap = new HashMap<>();
+                                Map<String, MXKey> keysMap = new HashMap<>();
 
-                        for (String deviceId : mapByUserId.keySet()) {
-                            try {
-                                keysMap.put(deviceId, new MXKey(mapByUserId.get(deviceId)));
-                            } catch (Exception e) {
-                                Log.e(LOG_TAG, "## claimOneTimeKeysForUsersDevices : fail to create a MXKey " + e.getMessage(), e);
+                                for (String deviceId : mapByUserId.keySet()) {
+                                    try {
+                                        keysMap.put(deviceId, new MXKey(mapByUserId.get(deviceId)));
+                                    } catch (Exception e) {
+                                        Log.e(LOG_TAG, "## claimOneTimeKeysForUsersDevices : fail to create a MXKey " + e.getMessage(), e);
+                                    }
+                                }
+
+                                if (keysMap.size() != 0) {
+                                    map.put(userId, keysMap);
+                                }
                             }
                         }
 
-                        if (keysMap.size() != 0) {
-                            map.put(userId, keysMap);
-                        }
+                        callback.onSuccess(new MXUsersDevicesMap<>(map));
                     }
-                }
-
-                callback.onSuccess(new MXUsersDevicesMap<>(map));
-            }
-        });
+                });
     }
 
     /**
@@ -194,8 +198,10 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
      * @param contentMap content to send. Map from user_id to device_id to content dictionary.
      * @param callback   the asynchronous callback.
      */
+    @Override
     public void sendToDevice(final String eventType,
-                             final MXUsersDevicesMap<Map<String, Object>> contentMap, final ApiCallback<Void> callback) {
+                             final MXUsersDevicesMap<Map<String, Object>> contentMap,
+                             final ApiCallback<Void> callback) {
         sendToDevice(eventType, contentMap, (new Random()).nextInt(Integer.MAX_VALUE) + "", callback);
     }
 
@@ -207,6 +213,7 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
      * @param transactionId the transactionId
      * @param callback      the asynchronous callback.
      */
+    @Override
     public void sendToDevice(final String eventType,
                              final MXUsersDevicesMap<Map<String, Object>> contentMap, final String transactionId,
                              final ApiCallback<Void> callback) {
@@ -217,11 +224,11 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
 
         mApi.sendToDevice(eventType, transactionId, content)
                 .enqueue(new RestAdapterCallback<Void>(description, null, callback, new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                sendToDevice(eventType, contentMap, callback);
-            }
-        }));
+                    @Override
+                    public void onRetry() {
+                        sendToDevice(eventType, contentMap, callback);
+                    }
+                }));
     }
 
     /**
@@ -235,11 +242,11 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
         mApi.getDevices()
                 .enqueue(new RestAdapterCallback<DevicesListResponse>(description, mUnsentEventsManager, callback,
                         new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                getDevices(callback);
-            }
-        }));
+                            @Override
+                            public void onRetry() {
+                                getDevices(callback);
+                            }
+                        }));
     }
 
     /**
@@ -255,11 +262,11 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
 
         mApi.deleteDevice(deviceId, params)
                 .enqueue(new RestAdapterCallback<Void>(description, mUnsentEventsManager, callback, new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                deleteDevice(deviceId, params, callback);
-            }
-        }));
+                    @Override
+                    public void onRetry() {
+                        deleteDevice(deviceId, params, callback);
+                    }
+                }));
     }
 
     /**
@@ -278,11 +285,11 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
 
         mApi.updateDeviceInfo(deviceId, params)
                 .enqueue(new RestAdapterCallback<Void>(description, mUnsentEventsManager, callback, new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                setDeviceName(deviceId, deviceName, callback);
-            }
-        }));
+                    @Override
+                    public void onRetry() {
+                        setDeviceName(deviceId, deviceName, callback);
+                    }
+                }));
     }
 
     /**
@@ -299,10 +306,10 @@ public class CryptoRestClient extends RestClient<CryptoApi> {
         mApi.getKeyChanges(from, to)
                 .enqueue(new RestAdapterCallback<KeyChangesResponse>(description, mUnsentEventsManager, callback,
                         new RestAdapterCallback.RequestRetryCallBack() {
-            @Override
-            public void onRetry() {
-                getKeyChanges(from, to, callback);
-            }
-        }));
+                            @Override
+                            public void onRetry() {
+                                getKeyChanges(from, to, callback);
+                            }
+                        }));
     }
 }

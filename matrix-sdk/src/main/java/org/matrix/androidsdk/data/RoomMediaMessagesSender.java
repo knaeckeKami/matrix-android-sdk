@@ -34,9 +34,7 @@ import org.matrix.androidsdk.R;
 import org.matrix.androidsdk.crypto.MXEncryptedAttachments;
 import org.matrix.androidsdk.db.MXMediaCache;
 import org.matrix.androidsdk.listeners.MXMediaUploadListener;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.message.AudioMessage;
 import org.matrix.androidsdk.rest.model.message.FileMessage;
 import org.matrix.androidsdk.rest.model.message.ImageMessage;
@@ -49,6 +47,8 @@ import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.PermalinkUtils;
 import org.matrix.androidsdk.util.ResourceUtils;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.io.File;
 import java.io.FileInputStream;

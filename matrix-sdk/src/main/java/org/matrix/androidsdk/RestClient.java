@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 
 import org.matrix.androidsdk.interceptors.CurlLoggingInterceptor;
 import org.matrix.androidsdk.interceptors.FormattedJsonHttpLogger;
-import org.matrix.androidsdk.listeners.IMXNetworkEventListener;
 import org.matrix.androidsdk.network.NetworkConnectivityReceiver;
 import org.matrix.androidsdk.rest.client.MXRestExecutorService;
 import org.matrix.androidsdk.rest.model.login.Credentials;
@@ -40,6 +39,7 @@ import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
 import org.matrix.androidsdk.util.PolymorphicRequestBodyConverter;
 import org.matrix.androidsdk.util.UnsentEventsManager;
+import org.matrix.androidsdk.util.listeners.IMXNetworkEventListener;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

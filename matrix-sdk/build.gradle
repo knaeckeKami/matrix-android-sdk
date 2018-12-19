@@ -140,24 +140,23 @@ static def gitRevisionDate() {
 }
 
 dependencies {
+    // Modules
+    implementation project(':matrix-sdk-util')
+    implementation project(':matrix-sdk-crypto')
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation "com.android.support:appcompat-v7:$support_lib_version"
+    implementation "com.android.support:preference-v7:$support_lib_version"
 
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation "com.google.code.gson:gson:$gson_version"
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-
-    implementation(name: 'olm-sdk', ext: 'aar')
-
-    // Database
-    kapt 'dk.ilios:realmfieldnameshelper:1.1.1'
 
     // replace the compile 'io.pristine:libjingle:9690@aar'
     implementation(name: 'react-native-webrtc', ext: 'aar')
@@ -173,7 +172,7 @@ dependencies {
 
     // Robolectric
     androidTestImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
+    androidTestImplementation "com.android.support:support-annotations:$support_lib_version"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }

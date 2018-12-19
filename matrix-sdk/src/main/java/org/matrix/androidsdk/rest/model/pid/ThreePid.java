@@ -21,12 +21,12 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.matrix.androidsdk.R;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.client.ProfileRestClient;
 import org.matrix.androidsdk.rest.client.ThirdPidRestClient;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.RequestEmailValidationResponse;
 import org.matrix.androidsdk.rest.model.RequestPhoneNumberValidationResponse;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.UUID;
 

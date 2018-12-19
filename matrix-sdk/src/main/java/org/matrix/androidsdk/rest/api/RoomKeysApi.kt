@@ -16,7 +16,7 @@
 
 package org.matrix.androidsdk.rest.api
 
-import org.matrix.androidsdk.rest.model.keys.*
+import org.matrix.androidsdk.crypto.model.keys.*
 import retrofit2.Call
 import retrofit2.http.*
 

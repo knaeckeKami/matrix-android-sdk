@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package org.matrix.androidsdk.crypto
 
 import android.support.test.InstrumentationRegistry
@@ -23,15 +25,16 @@ import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import org.matrix.androidsdk.common.*
+import org.matrix.androidsdk.crypto.cryptostore.IMXCryptoStore
+import org.matrix.androidsdk.crypto.cryptostore.MXFileCryptoStore
+import org.matrix.androidsdk.crypto.cryptostore.db.RealmCryptoStore
 import org.matrix.androidsdk.crypto.data.MXDeviceInfo
+import org.matrix.androidsdk.crypto.model.crypto.RoomKeyRequestBody
 import org.matrix.androidsdk.data.RoomState
-import org.matrix.androidsdk.data.cryptostore.IMXCryptoStore
-import org.matrix.androidsdk.data.cryptostore.MXFileCryptoStore
-import org.matrix.androidsdk.data.cryptostore.db.RealmCryptoStore
 import org.matrix.androidsdk.data.timeline.EventTimeline
 import org.matrix.androidsdk.listeners.MXEventListener
 import org.matrix.androidsdk.rest.model.Event
-import org.matrix.androidsdk.rest.model.crypto.RoomKeyRequestBody
+import org.matrix.androidsdk.util.CryptoUtilImpl
 import org.matrix.androidsdk.util.Log
 import org.matrix.olm.OlmAccount
 import org.matrix.olm.OlmSession
@@ -352,7 +355,7 @@ class CryptoStoreMigrationTest {
         val credentials = cryptoStoreHelper.createCredential()
 
         val fileCryptoStore = MXFileCryptoStore(false)
-        fileCryptoStore.initWithCredentials(context, credentials)
+        fileCryptoStore.initWithCredentials(context, credentials, CryptoUtilImpl)
 
         fileCryptoStore.open()
 
@@ -361,7 +364,7 @@ class CryptoStoreMigrationTest {
 
         // It will trigger the migration
         val realmCryptoStore = RealmCryptoStore()
-        realmCryptoStore.initWithCredentials(context, credentials)
+        realmCryptoStore.initWithCredentials(context, credentials, CryptoUtilImpl)
 
         // Check the realm store content
         checkOnRealmStore.invoke(realmCryptoStore)

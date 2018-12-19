@@ -35,13 +35,13 @@ import org.matrix.androidsdk.data.store.MXStoreListener;
 import org.matrix.androidsdk.listeners.MXEventListener;
 import org.matrix.androidsdk.rest.client.LoginRestClient;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.login.AuthParams;
 import org.matrix.androidsdk.rest.model.login.Credentials;
 import org.matrix.androidsdk.rest.model.login.RegistrationFlowResponse;
 import org.matrix.androidsdk.rest.model.login.RegistrationParams;
 import org.matrix.androidsdk.rest.model.message.Message;
 import org.matrix.androidsdk.util.JsonUtils;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.ArrayList;
 import java.util.HashMap;

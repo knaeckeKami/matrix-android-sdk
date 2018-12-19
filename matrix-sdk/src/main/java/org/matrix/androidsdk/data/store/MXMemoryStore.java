@@ -30,7 +30,6 @@ import org.matrix.androidsdk.data.RoomSummary;
 import org.matrix.androidsdk.data.comparator.Comparators;
 import org.matrix.androidsdk.data.metrics.MetricsListener;
 import org.matrix.androidsdk.data.timeline.EventTimeline;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.model.Event;
 import org.matrix.androidsdk.rest.model.ReceiptData;
 import org.matrix.androidsdk.rest.model.RoomMember;
@@ -42,6 +41,7 @@ import org.matrix.androidsdk.rest.model.pid.ThirdPartyIdentifier;
 import org.matrix.androidsdk.rest.model.sync.AccountData;
 import org.matrix.androidsdk.rest.model.sync.AccountDataElement;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
 
 import java.util.ArrayList;
 import java.util.Collection;

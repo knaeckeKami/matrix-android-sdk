@@ -21,13 +21,13 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import org.matrix.androidsdk.MXDataHandler;
-import org.matrix.androidsdk.listeners.IMXNetworkEventListener;
 import org.matrix.androidsdk.network.NetworkConnectivityReceiver;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.ssl.CertUtil;
 import org.matrix.androidsdk.ssl.UnrecognizedCertificateException;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.listeners.IMXNetworkEventListener;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -19,8 +19,8 @@
 package org.matrix.androidsdk.sync;
 
 import org.matrix.androidsdk.MXDataHandler;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.sync.SyncResponse;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 /**
  * Listener for the events thread that sends data back to a data handler.

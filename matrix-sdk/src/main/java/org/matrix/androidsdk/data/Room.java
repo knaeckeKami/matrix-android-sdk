@@ -37,11 +37,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
 import org.matrix.androidsdk.MXDataHandler;
 import org.matrix.androidsdk.MXPatterns;
+import org.matrix.androidsdk.R;
 import org.matrix.androidsdk.call.MXCallsManager;
 import org.matrix.androidsdk.crypto.MXCryptoError;
 import org.matrix.androidsdk.crypto.data.MXEncryptEventContentResult;
+import org.matrix.androidsdk.crypto.interfaces.CryptoRoom;
+import org.matrix.androidsdk.crypto.interfaces.CryptoRoomMember;
 import org.matrix.androidsdk.data.room.RoomAvatarResolver;
 import org.matrix.androidsdk.data.room.RoomDisplayNameResolver;
 import org.matrix.androidsdk.data.store.IMXStore;
@@ -51,13 +55,10 @@ import org.matrix.androidsdk.db.MXMediaCache;
 import org.matrix.androidsdk.listeners.IMXEventListener;
 import org.matrix.androidsdk.listeners.MXEventListener;
 import org.matrix.androidsdk.listeners.MXRoomEventListener;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.client.RoomsRestClient;
 import org.matrix.androidsdk.rest.client.UrlPostTask;
 import org.matrix.androidsdk.rest.model.CreatedEvent;
 import org.matrix.androidsdk.rest.model.Event;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.PowerLevels;
 import org.matrix.androidsdk.rest.model.ReceiptData;
 import org.matrix.androidsdk.rest.model.RoomDirectoryVisibility;
@@ -80,6 +81,9 @@ import org.matrix.androidsdk.rest.model.sync.RoomSync;
 import org.matrix.androidsdk.util.ImageUtils;
 import org.matrix.androidsdk.util.JsonUtils;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -94,7 +98,7 @@ import java.util.Set;
 /**
  * Class representing a room and the interactions we have with it.
  */
-public class Room {
+public class Room implements CryptoRoom {
 
     private static final String LOG_TAG = Room.class.getSimpleName();
 
@@ -192,6 +196,7 @@ public class Room {
      *
      * @return true if we should encrypt messages for invited users.
      */
+    @Override
     public boolean shouldEncryptForInvitedMembers() {
         String historyVisibility = getState().history_visibility;
         return !TextUtils.equals(historyVisibility, RoomState.HISTORY_VISIBILITY_JOINED);
@@ -422,6 +427,7 @@ public class Room {
     // Getters / setters
     //================================================================================
 
+    @Override
     public String getRoomId() {
         return getState().roomId;
     }
@@ -434,6 +440,7 @@ public class Room {
         return mAccountData;
     }
 
+    @Override
     public RoomState getState() {
         return mTimeline.getState();
     }
@@ -490,6 +497,19 @@ public class Room {
         });
     }
 
+    // This should not be necessary, but I haven't found any other solution for the moment.
+    @Override
+    public void getActiveMembersAsyncCrypto(@NotNull ApiCallback<List<CryptoRoomMember>> callback) {
+        getActiveMembersAsync(new SimpleApiCallback<List<RoomMember>>(callback) {
+            @Override
+            public void onSuccess(List<RoomMember> info) {
+                // Copy the list to get the correct type...
+                List<CryptoRoomMember> list2 = new ArrayList<>(info);
+                callback.onSuccess(list2);
+            }
+        });
+    }
+
     /**
      * Get the list of the members who have joined the room.
      *
@@ -508,6 +528,19 @@ public class Room {
                 }
 
                 callback.onSuccess(joinedMembersList);
+            }
+        });
+    }
+
+    // This should not be necessary, but I haven't found any other solution for the moment.
+    @Override
+    public void getJoinedMembersAsyncCrypto(@NotNull ApiCallback<List<CryptoRoomMember>> callback) {
+        getJoinedMembersAsync(new SimpleApiCallback<List<RoomMember>>(callback) {
+            @Override
+            public void onSuccess(List<RoomMember> info) {
+                // Copy the list to get the correct type...
+                List<CryptoRoomMember> list2 = new ArrayList<>(info);
+                callback.onSuccess(list2);
             }
         });
     }
@@ -757,7 +790,7 @@ public class Room {
                             // It can happen when user wants to join a room he was invited to, but the inviter has left
                             // minging kludge until https://matrix.org/jira/browse/SYN-678 is fixed
                             // 'Error when trying to join an empty room should be more explicit
-                            e.error = getStore().getContext().getString(org.matrix.androidsdk.R.string.room_error_join_failed_empty_room);
+                            e.error = getStore().getContext().getString(R.string.room_error_join_failed_empty_room);
                         }
 
                         // if the alias is not found

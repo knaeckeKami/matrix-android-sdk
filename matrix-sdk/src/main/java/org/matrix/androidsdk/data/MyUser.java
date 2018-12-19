@@ -21,13 +21,13 @@ package org.matrix.androidsdk.data;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.matrix.androidsdk.rest.callback.ApiCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.User;
 import org.matrix.androidsdk.rest.model.pid.ThirdPartyIdentifier;
 import org.matrix.androidsdk.rest.model.pid.ThreePid;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,14 +21,10 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.google.gson.JsonObject;
-
 import org.matrix.androidsdk.HomeServerConnectionConfig;
 import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.rest.api.LoginApi;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.model.Versions;
 import org.matrix.androidsdk.rest.model.login.Credentials;
 import org.matrix.androidsdk.rest.model.login.LoginFlow;
@@ -37,6 +33,8 @@ import org.matrix.androidsdk.rest.model.login.LoginParams;
 import org.matrix.androidsdk.rest.model.login.PasswordLoginParams;
 import org.matrix.androidsdk.rest.model.login.RegistrationParams;
 import org.matrix.androidsdk.rest.model.login.TokenLoginParams;
+import org.matrix.androidsdk.util.callback.ApiCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
 
 import java.util.List;
 import java.util.UUID;

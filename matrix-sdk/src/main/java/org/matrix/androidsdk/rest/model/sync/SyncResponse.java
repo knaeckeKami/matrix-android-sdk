@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 OpenMarket Ltd
  * Copyright 2017 Vector Creations Ltd
  * Copyright 2018 New Vector Ltd
@@ -6,9 +6,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,10 +18,13 @@
 
 package org.matrix.androidsdk.rest.model.sync;
 
+import org.matrix.androidsdk.crypto.interfaces.CryptoDeviceListResponse;
+import org.matrix.androidsdk.crypto.interfaces.CryptoDeviceOneTimeKeysCountSyncResponse;
+import org.matrix.androidsdk.crypto.interfaces.CryptoSyncResponse;
 import org.matrix.androidsdk.rest.model.group.GroupsSyncResponse;
 
 // SyncResponse represents the request response for server sync v2.
-public class SyncResponse {
+public class SyncResponse implements CryptoSyncResponse {
 
     /**
      * The user private data.
@@ -62,4 +65,14 @@ public class SyncResponse {
      * List of groups.
      */
     public GroupsSyncResponse groups;
+
+    @Override
+    public CryptoDeviceListResponse getDeviceLists() {
+        return deviceLists;
+    }
+
+    @Override
+    public CryptoDeviceOneTimeKeysCountSyncResponse getDeviceOneTimeKeysCount() {
+        return deviceOneTimeKeysCount;
+    }
 }

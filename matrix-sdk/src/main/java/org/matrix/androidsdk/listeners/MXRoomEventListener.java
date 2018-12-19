@@ -92,11 +92,11 @@ public class MXRoomEventListener extends MXEventListener {
     }
 
     @Override
-    public void onEventDecrypted(Event event) {
+    public void onEventDecrypted(String roomId, String eventId) {
         // Filter out events for other rooms
-        if (TextUtils.equals(mRoomId, event.roomId)) {
+        if (TextUtils.equals(mRoomId, roomId)) {
             try {
-                mEventListener.onEventDecrypted(event);
+                mEventListener.onEventDecrypted(roomId, eventId);
             } catch (Exception e) {
                 Log.e(LOG_TAG, "onDecryptedEvent exception " + e.getMessage(), e);
             }

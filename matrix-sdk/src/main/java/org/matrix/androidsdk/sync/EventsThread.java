@@ -30,15 +30,15 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 
 import org.matrix.androidsdk.data.metrics.MetricsListener;
-import org.matrix.androidsdk.listeners.IMXNetworkEventListener;
 import org.matrix.androidsdk.network.NetworkConnectivityReceiver;
-import org.matrix.androidsdk.rest.callback.ApiFailureCallback;
-import org.matrix.androidsdk.rest.callback.SimpleApiCallback;
 import org.matrix.androidsdk.rest.client.EventsRestClient;
-import org.matrix.androidsdk.rest.model.MatrixError;
 import org.matrix.androidsdk.rest.model.sync.RoomsSyncResponse;
 import org.matrix.androidsdk.rest.model.sync.SyncResponse;
 import org.matrix.androidsdk.util.Log;
+import org.matrix.androidsdk.util.callback.ApiFailureCallback;
+import org.matrix.androidsdk.util.callback.SimpleApiCallback;
+import org.matrix.androidsdk.util.listeners.IMXNetworkEventListener;
+import org.matrix.androidsdk.util.model.MatrixError;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -19,8 +19,8 @@ package org.matrix.androidsdk.rest.client;
 import org.matrix.androidsdk.HomeServerConnectionConfig;
 import org.matrix.androidsdk.RestClient;
 import org.matrix.androidsdk.rest.api.AccountDataApi;
-import org.matrix.androidsdk.rest.callback.ApiCallback;
 import org.matrix.androidsdk.rest.callback.RestAdapterCallback;
+import org.matrix.androidsdk.util.callback.ApiCallback;
 
 import java.util.HashMap;
 import java.util.Map;
